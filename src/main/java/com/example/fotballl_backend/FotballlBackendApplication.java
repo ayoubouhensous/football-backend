@@ -11,6 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collections;
+import java.util.HashSet;
+
 @SpringBootApplication
 public class FotballlBackendApplication {
 
@@ -38,10 +41,24 @@ public class FotballlBackendApplication {
                     .username("testuser")
                     .email("test@example.com")
                     .password(encryptedPassword)
+                    .roles(new HashSet<>(Collections.singleton(userRole))) // Assigner le rôle admin
                     .build();
 
             // Sauvegarder l'utilisateur dans la base de données
             userRepository.save(user);
+
+            // Créer un utilisateur admin
+            String passwordd = "adminpassword";
+            String encryptedPasswordd = passwordEncoder.encode(passwordd);
+
+            User adminUser = User.builder()
+                    .username("admin")
+                    .email("admin@example.com")
+                    .password(encryptedPasswordd)
+                    .roles(new HashSet<>(Collections.singleton(adminRole))) // Assigner le rôle admin
+                    .build();
+
+            userRepository.save(adminUser);
         };
     }
 
